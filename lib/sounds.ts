@@ -38,7 +38,10 @@ export function playEndGameSound(score: number): void {
   } else if (score >= 1000) {
     playSound('/sounds/try-harder.mp3');
   }
-  // No sound for < 1000
+  if (score<= 1000) {
+    playSound( 'sounds/you-are-a-farmer.mp3');
+  }
+  
 }
 
 export function playClickSound(): void {
@@ -48,3 +51,26 @@ export function playClickSound(): void {
 export function playBombSound(): void {
   playSound('/sounds/bomb.mp3');
 }
+
+let backgroundAudio: HTMLAudioElement | null = null
+
+export function startBackgroundMusic() {
+  if (!isSoundEnabled()) return
+
+  if (!backgroundAudio) {
+    backgroundAudio = new Audio("/sounds/background.mp3")
+    backgroundAudio.loop = true
+    backgroundAudio.volume = 0.4
+  }
+
+  backgroundAudio.currentTime = 0
+  backgroundAudio.play().catch(() => {})
+}
+
+export function stopBackgroundMusic() {
+  if (backgroundAudio) {
+    backgroundAudio.pause()
+    backgroundAudio.currentTime = 0
+  }
+}
+

@@ -5,6 +5,13 @@ import GameStartScreen from "@/components/game-start-screen"
 import GameBoard from "@/components/game-board"
 import GameOverScreen from "@/components/game-over-screen"
 
+import {
+  startBackgroundMusic,
+  stopBackgroundMusic,
+  playEndGameSound
+} from "@/lib/sounds"
+
+
 type GameState = "start" | "playing" | "over"
 
 export default function RykuCrushGame() {
@@ -17,6 +24,8 @@ export default function RykuCrushGame() {
   const handleStart = useCallback(() => {
     setGameState("playing")
     setGameKey((prev) => prev + 1)
+
+    startBackgroundMusic()
   }, [])
 
   const handleGameOver = useCallback(
@@ -28,6 +37,10 @@ export default function RykuCrushGame() {
       }
       setGameState("over")
     },
+
+    stopBackgroundMusic()
+    playEndGameSound(score)
+    
     [highScore]
   )
 
