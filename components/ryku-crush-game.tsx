@@ -11,7 +11,6 @@ import {
   playEndGameSound
 } from "@/lib/sounds"
 
-
 type GameState = "start" | "playing" | "over"
 
 export default function RykuCrushGame() {
@@ -36,11 +35,10 @@ export default function RykuCrushGame() {
         setHighScore(score)
       }
       setGameState("over")
+      
+      stopBackgroundMusic()
+      playEndGameSound(score)
     },
-
-    stopBackgroundMusic()
-    playEndGameSound(score)
-    
     [highScore]
   )
 
