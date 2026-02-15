@@ -14,15 +14,14 @@ interface GameStartScreenProps {
 
 export default function GameStartScreen({ onStart }: GameStartScreenProps) {
   const [soundEnabled, setSoundEnabledState] = useState(isSoundEnabled());
+  const { user, logout } = useAuth();
+  const [showLogin, setShowLogin] = useState(false);
   
   const toggleSound = () => {
     const newValue = !soundEnabled;
     setSoundEnabled(newValue);
     setSoundEnabledState(newValue);
   };
-
-  const { user, logout } = useAuth()
-const [showLogin, setShowLogin] = useState(false)
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-between py-8 px-4 bg-gradient-to-b from-black via-gray-900 to-black">
@@ -69,41 +68,40 @@ const [showLogin, setShowLogin] = useState(false)
             Ryku Crush
           </h1>
           <p className="max-w-xs text-sm text-gray-400">
-            Crush profile pictures to score points. Watch out for bombs and traps!
+            Crush profile pictures to score points. Watch out for bombs!
           </p>
         </div>
 
-        <div className="flex items-center gap-4">
-  {user ? (
-    <div className="text-center">
-      <p className="text-white mb-2">Welcome, {user.username}!</p>
-      <button
-        onClick={logout}
-        className="text-sm text-gray-400 hover:text-[#BFFF00]"
-      >
-        Logout
-      </button>
-    </div>
-  ) : (
-    <button
-      onClick={() => setShowLogin(true)}
-      className="px-6 py-3 border-2 border-[#BFFF00] text-[#BFFF00] rounded-xl font-bold hover:bg-[#BFFF00] hover:text-black transition-colors"
-    >
-      Login / Sign Up
-    </button>
-  )}
-</div>
-
-{showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
-
         <div className="flex flex-col items-center gap-4">
+          {/* Login/Logout Section */}
+          <div className="flex items-center gap-4">
+            {user ? (
+              <div className="text-center">
+                <p className="text-white mb-2">Welcome, <span className="text-[#BFFF00] font-bold">{user.username}</span>!</p>
+                <button
+                  onClick={logout}
+                  className="text-sm text-gray-400 hover:text-[#BFFF00] transition-colors"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowLogin(true)}
+                className="px-6 py-3 border-2 border-[#BFFF00] text-[#BFFF00] rounded-xl font-bold hover:bg-[#BFFF00] hover:text-black transition-colors"
+              >
+                Login / Sign Up
+              </button>
+            )}
+          </div>
+
           <button
             onClick={onStart}
             type="button"
             className="animate-glow-pulse rounded-xl bg-[#BFFF00] px-10 py-4 text-lg font-bold uppercase tracking-wider text-black transition-transform hover:scale-105 active:scale-95"
             style={{ boxShadow: '0 0 25px rgba(191, 255, 0, 0.4)' }}
           >
-            Play Now
+            Play as Guest
           </button>
 
           <div className="flex items-center gap-6 text-xs text-gray-500">
@@ -116,10 +114,6 @@ const [showLogin, setShowLogin] = useState(false)
               <span className="inline-block h-2.5 w-2.5 rounded-full bg-destructive" />
               <span>Bomb</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <span className="inline-block h-2.5 w-2.5 rounded-full bg-amber-500" />
-              <span>Trap</span>
-            </div>
           </div>
         </div>
 
@@ -128,7 +122,13 @@ const [showLogin, setShowLogin] = useState(false)
         </p>
       </div>
 
-      <Leaderboard />
+      {/* Weekly Leaderboard */}
+      <div className="w-full max-w-2xl mt-8">
+        <Leaderboard />
+      </div>
+      
+      {/* Login Modal */}
+      {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
       
       {/* Footer */}
       <footer className="text-sm text-gray-600">

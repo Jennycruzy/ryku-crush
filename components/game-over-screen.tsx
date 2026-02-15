@@ -1,8 +1,10 @@
 "use client"
 
 import Image from "next/image"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { playEndGameSound } from "@/lib/sounds"
+import { useAuth } from "@/lib/auth-context"
+import { submitScore } from "@/lib/api"
 
 interface GameOverScreenProps {
   score: number
@@ -19,20 +21,34 @@ export default function GameOverScreen({
   onRestart,
   onHome,
 }: GameOverScreenProps) {
-  const isNewHigh = score >= highScore && score > 0
-  
+  const isNewHigh = score > highScore
+  const { user, token } = useAuth()
+  const [scoreSaved, setScoreSaved] = useState(false)
+
   // Play end game sound
   useEffect(() => {
-    playEndGameSound(score);
-  }, [score]);
+    playEndGameSound(score)
+  }, [score])
+
+  // Save score to backend if user is logged in
+  useEffect(() => {
+    if (user && token && !scoreSaved && score > 0) {
+      submitScore(token, score, crushed)
+        .then(() => {
+          console.log('Score saved to leaderboard!')
+          setScoreSaved(true)
+        })
+        .catch(err => console.error('Failed to save score:', err))
+    }
+  }, [user, token, score, crushed, scoreSaved])
   
   // Get message based on score
   const getMessage = () => {
-    if (score >= 5000) return "Great Chad";
-    if (score >= 3000) return "Keep it up Chad";
-    if (score >= 1000) return "Try harder";
-    return "You are a role farmer";
-  };
+    if (score >= 5000) return "Great Chad"
+    if (score >= 3000) return "Keep it up Chad"
+    if (score >= 1000) return "Try harder"
+    return "You are a role farmer"
+  }
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-8 px-4 bg-gradient-to-b from-black via-gray-900 to-black">
@@ -55,6 +71,16 @@ export default function GameOverScreen({
         <p className="text-sm text-gray-400">
           {getMessage()}
         </p>
+        {!user && (
+          <p className="text-xs text-yellow-400 mt-2">
+            🔒 Login to save your score to the leaderboard!
+          </p>
+        )}
+        {user && scoreSaved && (
+          <p className="text-xs text-[#BFFF00] mt-2">
+            ✅ Score saved to leaderboard!
+          </p>
+        )}
       </div>
 
       <div className="flex items-center gap-8">
