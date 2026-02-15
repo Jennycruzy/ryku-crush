@@ -4,10 +4,9 @@ import Image from "next/image"
 import { useState } from "react"
 import { Volume2, VolumeX } from "lucide-react"
 import { isSoundEnabled, setSoundEnabled } from "@/lib/sounds"
-import { useAuth } from '@/lib/auth-context'
-import { useState } from 'react'
-import LoginModal from './login-modal'
-import Leaderboard from './leaderboard'
+import { useAuth } from "@/lib/auth-context"
+import LoginModal from "./login-modal"
+import Leaderboard from "./leaderboard"
 
 interface GameStartScreenProps {
   onStart: () => void

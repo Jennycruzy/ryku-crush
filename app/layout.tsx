@@ -1,29 +1,10 @@
-import React from "react"
-import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
-
-import './globals.css'
-import { AuthProvider } from '@/lib/auth-context'
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <body>
-        <AuthProvider>
-          {children}
-        </AuthProvider>
-      </body>
-    </html>
-  )
-}
-
-const _geist = Geist({ subsets: ['latin'] })
-const _geistMono = Geist_Mono({ subsets: ['latin'] })
+import type { Metadata } from "next"
+import "./globals.css"
+import { AuthProvider } from "@/lib/auth-context"
 
 export const metadata: Metadata = {
-  title: 'Ryku Crush - Profile Picture Crush Game',
-  description: 'Crush profile pictures and earn points in this addictive Raiku-powered game!',
-  generator: 'v0.app',
+  title: "Ryku Crush",
+  description: "Crush profile pictures to score points!",
 }
 
 export default function RootLayout({
@@ -33,7 +14,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="font-sans antialiased">{children}</body>
+      <body className="font-sans antialiased">
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+      </body>
     </html>
   )
 }
