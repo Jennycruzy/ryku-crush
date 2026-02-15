@@ -23,24 +23,19 @@ export default function RykuCrushGame() {
   const handleStart = useCallback(() => {
     setGameState("playing")
     setGameKey((prev) => prev + 1)
-
     startBackgroundMusic()
   }, [])
 
-  const handleGameOver = useCallback(
-    (score: number, crushed: number) => {
-      setFinalScore(score)
-      setTotalCrushed(crushed)
-      if (score > highScore) {
-        setHighScore(score)
-      }
-      setGameState("over")
-      
-      stopBackgroundMusic()
-      playEndGameSound(score)
-    },
-    [highScore]
-  )
+  const handleGameOver = useCallback((score: number, crushed: number) => {
+    setFinalScore(score)
+    setTotalCrushed(crushed)
+    if (score > highScore) {
+      setHighScore(score)
+    }
+    setGameState("over")
+    stopBackgroundMusic()
+    playEndGameSound(score)
+  }, [highScore])
 
   const handleHome = useCallback(() => {
     setGameState("start")
@@ -49,18 +44,8 @@ export default function RykuCrushGame() {
   return (
     <div className="min-h-screen bg-background">
       {gameState === "start" && <GameStartScreen onStart={handleStart} />}
-      {gameState === "playing" && (
-        <GameBoard key={gameKey} onGameOver={handleGameOver} highScore={highScore} />
-      )}
-      {gameState === "over" && (
-        <GameOverScreen
-          score={finalScore}
-          highScore={highScore}
-          crushed={totalCrushed}
-          onRestart={handleStart}
-          onHome={handleHome}
-        />
-      )}
+      {gameState === "playing" && <GameBoard key={gameKey} onGameOver={handleGameOver} highScore={highScore} />}
+      {gameState === "over" && <GameOverScreen score={finalScore} highScore={highScore} crushed={totalCrushed} onRestart={handleStart} onHome={handleHome} />}
     </div>
   )
 }
