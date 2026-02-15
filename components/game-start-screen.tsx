@@ -4,6 +4,10 @@ import Image from "next/image"
 import { useState } from "react"
 import { Volume2, VolumeX } from "lucide-react"
 import { isSoundEnabled, setSoundEnabled } from "@/lib/sounds"
+import { useAuth } from '@/lib/auth-context'
+import { useState } from 'react'
+import LoginModal from './login-modal'
+import Leaderboard from './leaderboard'
 
 interface GameStartScreenProps {
   onStart: () => void
@@ -17,6 +21,9 @@ export default function GameStartScreen({ onStart }: GameStartScreenProps) {
     setSoundEnabled(newValue);
     setSoundEnabledState(newValue);
   };
+
+  const { user, logout } = useAuth()
+const [showLogin, setShowLogin] = useState(false)
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-between py-8 px-4 bg-gradient-to-b from-black via-gray-900 to-black">
@@ -67,6 +74,29 @@ export default function GameStartScreen({ onStart }: GameStartScreenProps) {
           </p>
         </div>
 
+        <div className="flex items-center gap-4">
+  {user ? (
+    <div className="text-center">
+      <p className="text-white mb-2">Welcome, {user.username}!</p>
+      <button
+        onClick={logout}
+        className="text-sm text-gray-400 hover:text-[#BFFF00]"
+      >
+        Logout
+      </button>
+    </div>
+  ) : (
+    <button
+      onClick={() => setShowLogin(true)}
+      className="px-6 py-3 border-2 border-[#BFFF00] text-[#BFFF00] rounded-xl font-bold hover:bg-[#BFFF00] hover:text-black transition-colors"
+    >
+      Login / Sign Up
+    </button>
+  )}
+</div>
+
+{showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
+
         <div className="flex flex-col items-center gap-4">
           <button
             onClick={onStart}
@@ -98,6 +128,8 @@ export default function GameStartScreen({ onStart }: GameStartScreenProps) {
           Powered by Raiku
         </p>
       </div>
+
+      <Leaderboard />
       
       {/* Footer */}
       <footer className="text-sm text-gray-600">
