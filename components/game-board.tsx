@@ -15,16 +15,16 @@ const FRAME_INTERVAL = 20 // ms per frame
 const GROUND_Y = 95 // % from top where tiles "hit ground"
 const TILE_SIZE_CLASS = "w-14 h-14 sm:w-16 sm:h-16"
 
-// Speed multiplier based on time remaining (1x at 60s, up to 2.5x at 0s)
+// Speed multiplier based on time remaining (0.8x at 60s, up to 1.8x at 0s)
 function getSpeedMultiplier(timeLeft: number): number {
   const progress = 1 - timeLeft / GAME_TIME // 0 at start, 1 at end
-  return 1 + progress * 1.5
+  return 1 + progress * 0.8 // Goes up to 1.8x speed
 }
 
-// Spawn interval decreases as time runs out (450ms -> 180ms)
+// Spawn interval decreases as time runs out (600ms -> 300ms)
 function getSpawnInterval(timeLeft: number): number {
   const progress = 1 - timeLeft / GAME_TIME
-  return Math.max(180, 450 - progress * 270)
+  return Math.max(300, 600 - progress * 300)
 }
 
 interface GameBoardProps {
