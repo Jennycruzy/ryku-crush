@@ -30,16 +30,17 @@ function getSpawnInterval(timeLeft: number): number {
 interface GameBoardProps {
   onGameOver: (score: number, crushed: number) => void
   highScore: number
+  onHome?: () => void
 }
 
-export default function GameBoard({ onGameOver, highScore }: GameBoardProps) {
+export default function GameBoard({ onGameOver, highScore, onHome }: GameBoardProps) {
   const [tiles, setTiles] = useState<FallingTile[]>([])
   const [score, setScore] = useState(0)
   const [timeLeft, setTimeLeft] = useState(GAME_TIME)
   const [combo, setCombo] = useState(0)
   const [crushedCount, setCrushedCount] = useState(0)
   const [shaking, setShaking] = useState(false)
-  const [floatingTexts, setFloatingTexts] = useState<
+  const [floatingTexts, setFloatingTexts] = useState
     { id: string; text: string; x: number; y: number; color: string }[]
   >([])
   const lastCrushTime = useRef(0)
@@ -221,6 +222,13 @@ export default function GameBoard({ onGameOver, highScore }: GameBoardProps) {
     [combo, score]
   )
 
+  // Handle exit with confirmation
+  const handleExit = () => {
+    if (window.confirm('Exit game? Your progress will be lost and score will not be saved.')) {
+      onHome && onHome()
+    }
+  }
+
   // Column positions as percentages
   const colWidth = 100 / COLUMNS
   
@@ -240,6 +248,31 @@ export default function GameBoard({ onGameOver, highScore }: GameBoardProps) {
           boxShadow: timeLeft <= 10 ? `inset 0 0 ${20 + urgencyLevel * 30}px rgba(191, 255, 0, ${glowIntensity * 0.2})` : 'none'
         }}
       >
+        {/* Exit Button */}
+        {onHome && (
+          <button
+            onClick={handleExit}
+            className="absolute top-4 left-4 z-50 rounded-lg bg-gray-900/90 p-2 border-2 border-[#BFFF00]/30 hover:border-[#BFFF00] hover:bg-[#BFFF00]/10 transition-all group"
+            style={{ boxShadow: '0 0 10px rgba(191, 255, 0, 0.2)' }}
+            aria-label="Exit game"
+            title="Exit game"
+          >
+            <svg 
+              className="w-6 h-6 text-[#BFFF00]/70 group-hover:text-[#BFFF00] transition-colors" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M6 18L18 6M6 6l12 12" 
+              />
+            </svg>
+          </button>
+        )}
+
         {/* Neon particles overlay - fewer and more subtle */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           {Array.from({ length: 8 }).map((_, i) => (
@@ -327,7 +360,7 @@ export default function GameBoard({ onGameOver, highScore }: GameBoardProps) {
 
         {/* Bottom label */}
         <div className="absolute right-0 bottom-2 left-0 text-center text-[10px] uppercase tracking-wider text-muted-foreground/50">
-          Crush before they fall!
+          Crush before they fall, Avoid ETH Bombs!
         </div>
       </div>
     </div>
