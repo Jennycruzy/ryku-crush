@@ -42,7 +42,7 @@ export default function GameBoard({ onGameOver, highScore, onHome }: GameBoardPr
   const [shaking, setShaking] = useState(false)
   const [floatingTexts, setFloatingTexts] = useState
   { id: string; text: string; x: number; y: number; color: string }[]
-  >([])
+>([])
   const lastCrushTime = useRef(0)
   const gameAreaRef = useRef<HTMLDivElement>(null)
   const gameRunning = useRef(true)
