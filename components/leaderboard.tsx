@@ -13,6 +13,7 @@ interface LeaderboardEntry {
 export default function Leaderboard() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     loadLeaderboard()
@@ -20,10 +21,21 @@ export default function Leaderboard() {
 
   const loadLeaderboard = async () => {
     try {
+      setLoading(true)
+      setError(null)
       const data = await getLeaderboard()
-      setLeaderboard(data.leaderboard || [])
+      
+      // Ensure data.leaderboard is an array
+      if (data && Array.isArray(data.leaderboard)) {
+        setLeaderboard(data.leaderboard)
+      } else {
+        console.error('Leaderboard data is not an array:', data)
+        setLeaderboard([])
+      }
     } catch (error) {
       console.error('Failed to load leaderboard:', error)
+      setError('Failed to load leaderboard')
+      setLeaderboard([])
     } finally {
       setLoading(false)
     }
@@ -38,13 +50,28 @@ export default function Leaderboard() {
     )
   }
 
+  if (error) {
+    return (
+      <div className="bg-gray-900/80 rounded-xl p-6 border border-[#BFFF00]/20">
+        <h2 className="text-2xl font-bold text-[#BFFF00] mb-4">Weekly Leaderboard</h2>
+        <p className="text-red-400">{error}</p>
+        <button 
+          onClick={loadLeaderboard}
+          className="mt-4 px-4 py-2 bg-[#BFFF00] text-black rounded-lg hover:bg-[#a8e600] transition-colors"
+        >
+          Try Again
+        </button>
+      </div>
+    )
+  }
+
   return (
     <div className="bg-gray-900/80 rounded-xl p-6 border border-[#BFFF00]/20 max-w-2xl mx-auto">
       <h2 className="text-2xl font-bold text-[#BFFF00] mb-4 text-center">
         🏆 Weekly Leaderboard
       </h2>
 
-      {leaderboard.length === 0 ? (
+      {!Array.isArray(leaderboard) || leaderboard.length === 0 ? (
         <p className="text-gray-400 text-center py-8">
           No scores yet. Be the first to play!
         </p>
