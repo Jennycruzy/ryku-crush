@@ -68,41 +68,47 @@ export default function GameStartScreen({ onStart }: GameStartScreenProps) {
             Ryku Crush
           </h1>
           <p className="max-w-xs text-sm text-gray-400">
-            Crush profile pictures to score points. Watch out for bombs!
+            Crush profile pictures to score points. Watch out for ETH bombs!
           </p>
         </div>
 
         <div className="flex flex-col items-center gap-4">
           {/* Login/Logout Section */}
-          <div className="flex items-center gap-4">
-            {user ? (
-              <div className="text-center">
-                <p className="text-white mb-2">Welcome, <span className="text-[#BFFF00] font-bold">{user.username}</span>!</p>
-                <button
-                  onClick={logout}
-                  className="text-sm text-gray-400 hover:text-[#BFFF00] transition-colors"
-                >
-                  Logout
-                </button>
-              </div>
-            ) : (
+          {user ? (
+            <div className="text-center">
+              <p className="text-white mb-2">Welcome, <span className="text-[#BFFF00] font-bold">{user.username}</span>!</p>
               <button
-                onClick={() => setShowLogin(true)}
-                className="px-6 py-3 border-2 border-[#BFFF00] text-[#BFFF00] rounded-xl font-bold hover:bg-[#BFFF00] hover:text-black transition-colors"
+                onClick={logout}
+                className="text-sm text-gray-400 hover:text-[#BFFF00] transition-colors"
               >
-                Login / Sign Up
+                Logout
               </button>
-            )}
-          </div>
+            </div>
+          ) : (
+            <button
+              onClick={() => setShowLogin(true)}
+              className="px-6 py-3 border-2 border-[#BFFF00] text-[#BFFF00] rounded-xl font-bold hover:bg-[#BFFF00] hover:text-black transition-colors"
+            >
+              Login / Sign Up
+            </button>
+          )}
 
+          {/* Play Button - Changes based on login status */}
           <button
             onClick={onStart}
             type="button"
             className="animate-glow-pulse rounded-xl bg-[#BFFF00] px-10 py-4 text-lg font-bold uppercase tracking-wider text-black transition-transform hover:scale-105 active:scale-95"
             style={{ boxShadow: '0 0 25px rgba(191, 255, 0, 0.4)' }}
           >
-            Play as Guest
+            {user ? 'Play Now' : 'Play as Guest'}
           </button>
+
+          {/* Info message for guests */}
+          {!user && (
+            <p className="text-xs text-gray-500 -mt-2">
+              Login to save your scores to the leaderboard
+            </p>
+          )}
 
           <div className="flex items-center gap-6 text-xs text-gray-500">
             <div className="flex items-center gap-1.5">
@@ -116,10 +122,6 @@ export default function GameStartScreen({ onStart }: GameStartScreenProps) {
             </div>
           </div>
         </div>
-
-        <p className="text-xs text-gray-600">
-          Powered by Raiku
-        </p>
       </div>
 
       {/* Weekly Leaderboard */}
@@ -132,7 +134,7 @@ export default function GameStartScreen({ onStart }: GameStartScreenProps) {
       
       {/* Footer */}
       <footer className="text-sm text-gray-600">
-        Made with <span className="text-red-500">❤️</span> by jennycruzy
+        Made with <span className="text-red-500">❤️</span> Jennycruzy
       </footer>
     </div>
   )
