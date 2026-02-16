@@ -106,7 +106,7 @@ export default function GameStartScreen({ onStart }: GameStartScreenProps) {
           {/* Info message for guests */}
           {!user && (
             <p className="text-xs text-gray-500 -mt-2">
-              Login to save your scores to the leaderboard
+              Login to save your scores to the leaderboard!
             </p>
           )}
 
