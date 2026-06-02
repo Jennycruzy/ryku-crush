@@ -316,4 +316,4 @@ MIT
 
 ## Credits
 
-Made with ❤️ by jennycruzy
+Made with ❤️ jennycruzy
